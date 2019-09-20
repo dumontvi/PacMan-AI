@@ -86,13 +86,63 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    "*** YOUR CODE HERE ***"    
+    ## Stack seems like the most sensible data structure to use.
+
+    openStack = util.Stack()
+    startState = {
+        'state': problem.getStartState(),
+        'prior_states': [problem.getStartState()],
+        'actions': []
+    }
+    openStack.push(startState) 
+
+    while not openStack.isEmpty():
+        n = openStack.pop()
+        if(problem.isGoalState(n['state'])):
+            return n['actions']
+        successors = problem.getSuccessors(n['state'])   
+        for succ in successors:
+            if succ[0] not in n['prior_states']:
+                succ_dict = {
+                    'state': succ[0],
+                    'prior_states': n['prior_states'] + [succ[0]],
+                    'actions': n['actions'] + [succ[1]],
+                }
+                openStack.push(succ_dict)
+
+    raise Exception, 'The problem has empty states'     
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    openQueue = util.Queue()
+    startState = {
+        'state': problem.getStartState(),
+        'actions': [],
+        'cost': 0
+    }
+    openQueue.push(startState) 
+    seen = {startState['state']: 0}
+
+    while not openQueue.isEmpty():
+        n = openQueue.pop()
+        if n['cost'] <= seen[n['state']]:
+            if(problem.isGoalState(n['state'])):
+                return n['actions']
+            successors = problem.getSuccessors(n['state'])   
+            for succ in successors:
+                if succ[0] not in seen or (n['cost'] + succ[2] < seen[succ[0]]):
+                    succ_dict = {
+                        'state': succ[0],
+                        'actions': n['actions'] + [succ[1]],
+                        'cost': n['cost'] + succ[2]
+                    }
+                    openQueue.push(succ_dict)
+                    seen[succ[0]] =  succ_dict['cost']
+
+    raise Exception, 'The problem has empty states'
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
