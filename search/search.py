@@ -111,7 +111,8 @@ def depthFirstSearch(problem):
                 }
                 openStack.push(succ_dict)
 
-    raise Exception, 'The problem has empty states'     
+    raise Exception, 'The problem has empty states' 
+    return -1    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -130,7 +131,7 @@ def breadthFirstSearch(problem):
         if n['cost'] <= seen[n['state']]:
             if(problem.isGoalState(n['state'])):
                 return n['actions']
-            successors = problem.getSuccessors(n['state'])   
+            successors = problem.getSuccessors(n['state'])  
             for succ in successors:
                 if succ[0] not in seen or (n['cost'] + succ[2] < seen[succ[0]]):
                     succ_dict = {
@@ -142,12 +143,38 @@ def breadthFirstSearch(problem):
                     seen[succ[0]] =  succ_dict['cost']
 
     raise Exception, 'The problem has empty states'
-
+    return -1    
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    openQueue = util.PriorityQueue()
+    startState = {
+        'state': problem.getStartState(),
+        'actions': [],
+        'cost': 0
+    }
+    openQueue.push(startState, startState['state']) 
+    seen = {startState['state']: 0}
+
+    while not openQueue.isEmpty():
+        n = openQueue.pop()
+        if n['cost'] <= seen[n['state']]:
+            if(problem.isGoalState(n['state'])):
+                return n['actions']
+            successors = problem.getSuccessors(n['state'])   
+            for succ in successors:
+                if succ[0] not in seen or (n['cost'] + succ[2] < seen[succ[0]]):
+                    succ_dict = {
+                        'state': succ[0],
+                        'actions': n['actions'] + [succ[1]],
+                        'cost': n['cost'] + succ[2]
+                    }
+                    openQueue.push(succ_dict, succ_dict['cost'])
+                    seen[succ[0]] =  succ_dict['cost']
+
+    raise Exception, 'The problem has empty states'
+    return -1    
 
 def nullHeuristic(state, problem=None):
     """
@@ -159,7 +186,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    openQueue = util.PriorityQueue()
+    startState = {
+        'state': problem.getStartState(),
+        'actions': [],
+        'cost': 0
+    }
+    openQueue.push(startState, startState['state']) 
+    seen = {startState['state']: 0}
+
+    while not openQueue.isEmpty():
+        n = openQueue.pop()
+        if n['cost'] <= seen[n['state']]:
+            if(problem.isGoalState(n['state'])):
+                return n['actions']
+            successors = problem.getSuccessors(n['state'])   
+            for succ in successors:
+                new_cost = n['cost'] + succ[2] + heuristic(succ[0], problem)
+                if succ[0] not in seen or (new_cost <= seen[succ[0]]):
+                    succ_dict = {
+                        'state': succ[0],
+                        'actions': n['actions'] + [succ[1]],
+                        'cost':  n['cost'] + succ[2],
+                    }
+                    openQueue.push(succ_dict, succ_dict['cost'] + heuristic(succ[0], problem))
+                    seen[succ[0]] =  succ_dict['cost']
+
+    raise Exception, 'The problem has empty states'
+    return -1                       
 
 
 # Abbreviations
