@@ -139,6 +139,7 @@ def breadthFirstSearch(problem):
                         'actions': n['actions'] + [succ[1]],
                         'cost': n['cost'] + succ[2]
                     }
+
                     openQueue.push(succ_dict)
                     seen[succ[0]] =  succ_dict['cost']
 
@@ -186,13 +187,19 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    openQueue = util.PriorityQueue()
+
+    def priorityFunction(item):
+        return (item['fScore'], item['hScore'])
+
+    openQueue = util.PriorityQueueWithFunction(priorityFunction)
     startState = {
         'state': problem.getStartState(),
         'actions': [],
-        'cost': 0
+        'cost': 0,
+        'fScore': 0,
+        'hScore': 0
     }
-    openQueue.push(startState, startState['state']) 
+    openQueue.push(startState) 
     seen = {startState['state']: 0}
 
     while not openQueue.isEmpty():
@@ -202,19 +209,21 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 return n['actions']
             successors = problem.getSuccessors(n['state'])   
             for succ in successors:
-                new_cost = n['cost'] + succ[2] + heuristic(succ[0], problem)
-                if succ[0] not in seen or (new_cost <= seen[succ[0]]):
+                gCost = n['cost'] + succ[2] # g(n)
+                hCost = heuristic(succ[0], problem) # h(n)
+                if succ[0] not in seen or (gCost < seen[succ[0]]):
                     succ_dict = {
                         'state': succ[0],
                         'actions': n['actions'] + [succ[1]],
-                        'cost':  n['cost'] + succ[2],
+                        'cost':  gCost,
+                        'fScore': gCost + hCost,
+                        'hScore': hCost
                     }
-                    openQueue.push(succ_dict, succ_dict['cost'] + heuristic(succ[0], problem))
-                    seen[succ[0]] =  succ_dict['cost']
+                    openQueue.push(succ_dict)
+                    seen[succ[0]] =  succ_dict['cost']     
 
     raise Exception, 'The problem has empty states'
     return -1                       
-
 
 # Abbreviations
 bfs = breadthFirstSearch
