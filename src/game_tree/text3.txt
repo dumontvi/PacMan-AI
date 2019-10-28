@@ -1,0 +1,36 @@
+Starting on 10-23 at 22:18:52
+
+Question q1
+===========
+
+(0.84, 3.79, 0.42)
+Pacman emerges victorious! Score: -491
+(0.76, 3.34, 0.32)
+Pacman emerges victorious! Score: 419
+(0.37, 1.97, 0.5)
+Pacman died! Score: -167
+(0.54, 1.07, 0.29)
+Pacman emerges victorious! Score: -4010
+(0.59, 4.59, 0.36)
+Pacman emerges victorious! Score: -261
+(0.01, 4.26, 0.77)
+Pacman emerges victorious! Score: 1248
+(0.5, 2.86, 0.83)
+Pacman emerges victorious! Score: 481
+(0.36, 2.13, 0.89)
+Pacman emerges victorious! Score: 957
+*** FAIL: Terminated with a string exception.
+
+### Question q1: 0/4 ###
+
+
+Finished at 22:19:24
+
+Provisional grades
+==================
+Question q1: 0/4
+------------------
+Total: 0/4
+
+TO OBTAIN MARKS YOU MUST SUBMIT YOUR CODE USING MarkUs.
+
